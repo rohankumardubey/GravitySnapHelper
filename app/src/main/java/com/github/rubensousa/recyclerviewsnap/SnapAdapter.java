@@ -1,22 +1,22 @@
 package com.github.rubensousa.recyclerviewsnap;
 
 
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.github.rubensousa.gravitysnaphelper.GravityPagerSnapHelper;
 import com.github.rubensousa.gravitysnaphelper.GravitySnapHelper;
-import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSnapHelper;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class SnapAdapter extends RecyclerView.Adapter<SnapAdapter.ViewHolder> implements GravitySnapHelper.SnapListener {
 
@@ -91,11 +91,13 @@ public class SnapAdapter extends RecyclerView.Adapter<SnapAdapter.ViewHolder> im
         } else if (snap.getGravity() == Gravity.CENTER) { // Pager snap
             holder.recyclerView.setLayoutManager(new LinearLayoutManager(holder
                     .recyclerView.getContext(), RecyclerView.HORIZONTAL, false));
-            new GravityPagerSnapHelper(Gravity.START).attachToRecyclerView(holder.recyclerView);
+            new GravityPagerSnapHelper(Gravity.START, false, this)
+                    .attachToRecyclerView(holder.recyclerView);
         } else { // Top / Bottom
             holder.recyclerView.setLayoutManager(new LinearLayoutManager(holder
                     .recyclerView.getContext()));
-            new GravitySnapHelper(snap.getGravity()).attachToRecyclerView(holder.recyclerView);
+            new GravitySnapHelper(snap.getGravity(), false, this)
+                    .attachToRecyclerView(holder.recyclerView);
         }
 
 
@@ -119,7 +121,7 @@ public class SnapAdapter extends RecyclerView.Adapter<SnapAdapter.ViewHolder> im
 
         public TextView snapTextView;
         public RecyclerView recyclerView;
-        public MaterialButton scrollButton;
+        public Button scrollButton;
         private Snap snap;
 
         public ViewHolder(View itemView) {
@@ -152,8 +154,8 @@ public class SnapAdapter extends RecyclerView.Adapter<SnapAdapter.ViewHolder> im
                         lm.findFirstCompletelyVisibleItemPosition()
                         : lm.findLastCompletelyVisibleItemPosition();
                 if (firstVisiblePosition != RecyclerView.NO_POSITION) {
-                    ((GravitySnapHelper) listener).smoothScrollToPosition(
-                            firstVisiblePosition + 1);
+                   /* ((GravitySnapHelper) listener).smoothScrollToPosition(
+                            firstVisiblePosition + 1);*/
                 }
             }
         }

@@ -2,13 +2,9 @@ apply plugin: 'com.jfrog.bintray'
 
 version = VERSION_NAME
 
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
 bintray {
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
-
+    user = bintray_user
+    key = bintray_apikey
     configurations = ['archives']
     pkg {
         repo = 'maven'
@@ -16,13 +12,13 @@ bintray {
         desc = POM_DESCRIPTION
         websiteUrl = POM_URL
         vcsUrl = POM_SCM_CONNECTION
-        licenses = POM_LICENSES
+        licenses = ['Apache-2.0']
         publish = true
         publicDownloadNumbers = true
         version {
             gpg {
                 sign = true
-                passphrase = properties.getProperty("bintray.gpg.password")
+                passphrase = bintray_gpg_password
             }
         }
     }

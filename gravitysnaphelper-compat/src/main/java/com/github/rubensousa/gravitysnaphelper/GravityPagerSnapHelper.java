@@ -16,45 +16,54 @@
 
 package com.github.rubensousa.gravitysnaphelper;
 
+
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.PagerSnapHelper;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.LinearSnapHelper;
-import androidx.recyclerview.widget.RecyclerView;
-
-
-public class GravitySnapHelper extends LinearSnapHelper {
+public class GravityPagerSnapHelper extends PagerSnapHelper {
 
     @NonNull
     private final GravityDelegate delegate;
 
-    public GravitySnapHelper(int gravity) {
+    public GravityPagerSnapHelper(int gravity) {
         this(gravity, false, null);
     }
 
-    public GravitySnapHelper(int gravity, boolean enableSnapLastItem) {
+    public GravityPagerSnapHelper(int gravity, boolean enableSnapLastItem) {
         this(gravity, enableSnapLastItem, null);
     }
 
-    public GravitySnapHelper(int gravity, boolean enableSnapLastItem,
-                             @Nullable SnapListener snapListener) {
+    public GravityPagerSnapHelper(int gravity, boolean enableSnapLastItem,
+                                  @Nullable GravitySnapHelper.SnapListener snapListener) {
         delegate = new GravityDelegate(gravity, enableSnapLastItem, snapListener);
     }
 
     @Override
     public void attachToRecyclerView(@Nullable RecyclerView recyclerView)
             throws IllegalStateException {
+        if (recyclerView != null
+                && (!(recyclerView.getLayoutManager() instanceof LinearLayoutManager)
+                || recyclerView.getLayoutManager() instanceof GridLayoutManager)) {
+            throw new IllegalStateException("GravityPagerSnapHelper needs a RecyclerView" +
+                    " with a LinearLayoutManager");
+        }
         delegate.attachToRecyclerView(recyclerView);
         super.attachToRecyclerView(recyclerView);
     }
 
+    @Nullable
     @Override
     public int[] calculateDistanceToFinalSnap(@NonNull RecyclerView.LayoutManager layoutManager,
                                               @NonNull View targetView) {
         return delegate.calculateDistanceToFinalSnap(layoutManager, targetView);
     }
 
+    @Nullable
     @Override
     public View findSnapView(RecyclerView.LayoutManager layoutManager) {
         return delegate.findSnapView(layoutManager);
@@ -77,10 +86,6 @@ public class GravitySnapHelper extends LinearSnapHelper {
 
     public void scrollToPosition(int position) {
         delegate.scrollToPosition(position);
-    }
-
-    public interface SnapListener {
-        void onSnap(int position);
     }
 
 }
