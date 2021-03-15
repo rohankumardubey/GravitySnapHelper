@@ -297,13 +297,10 @@ def configurePom(pom) {
         developerConnection = POM_SCM_DEV_CONNECTION
     }
 
-    if (hasProperty('POM_LICENSE_NAME')) {
-        pom.licenses {
-            license {
-                name = POM_LICENSE_NAME
-                url = POM_LICENSE_URL
-                distribution = POM_LICENSE_DIST
-            }
+    pom.licenses {
+        license {
+            name = "The Apache Software License, Version 2.0"
+            url = "http://www.apache.org/licenses/LICENSE-2.0.txt"
         }
     }
 
